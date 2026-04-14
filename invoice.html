@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Submit a Vendor Invoice – ChurchOps</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f5f5f9;
+      --card: #ffffff;
+      --accent: #2563f2;
+      --accent-soft: #e5edff;
+      --danger: #d14343;
+      --text-main: #1f2933;
+      --text-muted: #7b8794;
+      --border: #d8e2f2;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 720px;
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      padding: 24px 24px 28px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .intro {
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .section-label {
+      margin-top: 18px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .field-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .field {
+      flex: 1 1 220px;
+      min-width: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    label .req {
+      color: var(--danger);
+      margin-left: 2px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"],
+    input[type="date"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text-main);
+      background-color: #f9fbff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      background-color: #ffffff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 242, 0.2);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .help {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .payment-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #f7f9fc;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .payment-option input {
+      margin: 0;
+    }
+
+    .payment-option.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: #102a6b;
+    }
+
+    .payment-detail {
+      border-radius: 10px;
+      border: 1px dashed var(--border);
+      background: #f9fbff;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+
+    .error-banner {
+      display: none;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(209, 67, 67, 0.06);
+      border: 1px solid rgba(209, 67, 67, 0.3);
+      color: #8b1c1c;
+      font-size: 13px;
+    }
+
+    .success-banner {
+      display: none;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #e3f9e5;
+      border: 1px solid #8ed1a5;
+      color: #03543f;
+      font-size: 13px;
+    }
+
+    .info-banner {
+      display: none;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      font-size: 13px;
+    }
+
+    .actions {
+      margin-top: 16px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .button-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(37, 99, 242, 0.25);
+      transition: box-shadow 0.15s ease, transform 0.08s ease, background-color 0.15s ease;
+    }
+
+    .button-primary:hover {
+      background: #1746d3;
+      box-shadow: 0 10px 20px rgba(37, 99, 242, 0.32);
+    }
+
+    .button-primary:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 8px rgba(37, 99, 242, 0.2);
+    }
+
+    .button-primary[disabled] {
+      opacity: 0.5;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .attachment-field {
+      margin-top: 8px;
+    }
+
+    .badge-warning {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #fff7ed;
+      color: #9a3412;
+      border: 1px solid #fed7aa;
+      margin-left: 4px;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 20px 16px 24px;
+      }
+    }
+  </style>
+
+  <!-- Firebase JS SDK (compat) for reading externalForms config from Firestore -->
+  <!-- TODO: make sure these versions match what you want to use globally. -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+</head>
+<body>
+  <div class="page">
+    <div class="card">
+      <div class="eyebrow">External Vendor Invoice</div>
+      <h1>Submit a Vendor Invoice</h1>
+      <p class="intro">
+        Use this form to submit an invoice from your business. Your information will be sent securely to our
+        finance team for review and payment.
+      </p>
+
+      <!-- Dynamic instructions from /teams/{teamId}/config/externalForms.invoiceInstructions -->
+      <div id="dynamicInstructions" class="intro" style="display:none;"></div>
+
+      <!-- Banner shown when invoiceEnabled is false -->
+      <div id="formDisabledNotice" class="info-banner"></div>
+
+      <div id="errorBanner" class="error-banner"></div>
+      <div id="successBanner" class="success-banner"></div>
+
+      <form id="invoiceForm" novalidate>
+        <!-- Business & Contact -->
+        <div class="section-label">Business &amp; Contact</div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="requesterName">Contact Name <span class="req">*</span></label>
+            <input id="requesterName" name="requesterName" type="text" autocomplete="name" required />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="requesterPhone">Phone Number <span class="req">*</span></label>
+            <input id="requesterPhone" name="requesterPhone" type="tel" inputmode="tel" placeholder="423-555-1234" required />
+            <div class="help">We’ll format this as you type.</div>
+          </div>
+          <div class="field">
+            <label for="requesterEmail">Email Address <span class="req">*</span></label>
+            <input id="requesterEmail" name="requesterEmail" type="email" autocomplete="email" required />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="vendorName">Business Name</label>
+            <input id="vendorName" name="vendorName" type="text" autocomplete="organization" />
+          </div>
+          <div class="field">
+            <label for="invoiceNumber">Invoice #</label>
+            <input id="invoiceNumber" name="invoiceNumber" type="text" />
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="section-label">Payment Method</div>
+        <div class="payment-options" id="paymentOptions">
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="direct_deposit" checked />
+            <span>Direct Deposit</span>
+          </label>
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="mail_check" />
+            <span>Mail a Check</span>
+          </label>
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="pickup" />
+            <span>Pick Up at Church Office</span>
+          </label>
+        </div>
+
+        <!-- Direct Deposit Details -->
+        <div id="directDepositDetails" class="payment-detail">
+          <div class="field-row">
+            <div class="field">
+              <label>
+                <input type="checkbox" id="useExistingDepositInfo" />
+                Use direct deposit information we already have on file
+              </label>
+              <div class="help">
+                If you’ve been paid by this church via direct deposit before, check this and you can skip entering your
+                account details.
+              </div>
+            </div>
+          </div>
+
+          <div id="ddFields">
+            <div class="field-row">
+              <div class="field">
+                <label for="bankRoutingNumber">Routing Number <span class="req">*</span></label>
+                <input id="bankRoutingNumber" name="bankRoutingNumber" type="password" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label for="bankAccountNumber">Account Number <span class="req">*</span></label>
+                <input id="bankAccountNumber" name="bankAccountNumber" type="password" autocomplete="off" />
+              </div>
+            </div>
+            <div class="help">Your banking details are encrypted in transit and stored securely.</div>
+          </div>
+        </div>
+
+        <!-- Mail Check Details -->
+        <div id="mailDetails" class="payment-detail" style="display:none;">
+          <div class="field-row">
+            <div class="field">
+              <label for="payToName">Name on Check <span class="req">*</span></label>
+              <input id="payToName" name="payToName" type="text" />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="mailingAddress">Mailing Address <span class="req">*</span></label>
+              <textarea id="mailingAddress" name="mailingAddress" rows="3"></textarea>
+            </div>
+          </div>
+          <div class="help">
+            Include full address with city, state, and ZIP code.
+          </div>
+        </div>
+
+        <!-- Pickup Details -->
+        <div id="pickupDetails" class="payment-detail" style="display:none;">
+          <div class="help">
+            We’ll prepare your check for pickup at the church office. Please check office hours before arriving.
+          </div>
+        </div>
+
+        <!-- Invoice Details -->
+        <div class="section-label">Invoice Details</div>
+        <div class="field-row">
+          <div class="field">
+            <label for="amount">Amount Due (USD) <span class="req">*</span></label>
+            <input id="amount" name="amount" type="number" min="0" step="0.01" placeholder="0.00" required />
+          </div>
+          <div class="field">
+            <label for="dueDate">Due Date</label>
+            <input id="dueDate" name="dueDate" type="date" />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="description">What Is This Invoice For? <span class="req">*</span></label>
+            <textarea id="description" name="description" rows="3" required></textarea>
+          </div>
+        </div>
+
+        <div class="field-row attachment-field">
+          <div class="field">
+            <label for="invoiceFile">
+              Upload Invoice / Attachment (Optional)
+            </label>
+            <input id="invoiceFile" name="invoiceFile" type="file" accept=".pdf,image/*" />
+            <div class="help">
+              You can attach a PDF or image of your invoice. Max 10 MB.
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" id="submitButton" class="button-primary">
+            Submit Invoice
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      function domById(id) { return document.getElementById(id); }
+
+      function showError(msg) {
+        const el = domById("errorBanner");
+        el.textContent = msg;
+        el.style.display = "block";
+        domById("successBanner").style.display = "none";
+      }
+
+      function showSuccess(msg) {
+        const el = domById("successBanner");
+        el.textContent = msg;
+        el.style.display = "block";
+        domById("errorBanner").style.display = "none";
+      }
+
+      function clearMessages() {
+        domById("errorBanner").style.display = "none";
+        domById("successBanner").style.display = "none";
+      }
+
+      // Get teamId from ?teamId=... in query string
+      const params = new URLSearchParams(window.location.search);
+      const teamId = (params.get("teamId") || "").trim();
+
+      const paymentOptions = Array.from(
+        document.querySelectorAll('input[name="paymentMethod"]')
+      );
+
+      const instructionsEl = domById("dynamicInstructions");
+      const formDisabledNotice = domById("formDisabledNotice");
+      const form = domById("invoiceForm");
+      const submitButton = domById("submitButton");
+
+      // Initialize Firebase + Firestore + Storage for reading externalForms config and uploads
+      let db = null;
+      let storage = null;
+      try {
+        if (typeof firebase !== "undefined") {
+          if (!firebase.apps.length) {
+            // TODO: fill in your actual Firebase web app config from the Firebase console.
+            // You can copy this from Project Settings → General → Your apps → Web app.
+            const firebaseConfig = {
+              apiKey: "AIzaSyCLLRMc-Tw-7EJMorQzw7-736gyQhvniGQ",
+              authDomain: "crswlkoperations.firebaseapp.com",
+              projectId: "crswlkoperations",
+              storageBucket: "crswlkoperations.firebasestorage.app",
+              messagingSenderId: "828244861941",
+              appId: "1:828244861941:web:4a41c371fb8474f12476bc",
+              measurementId: "G-N9892V2MT7"
+            };
+            firebase.initializeApp(firebaseConfig);
+          }
+          db = firebase.firestore();
+          storage = firebase.storage();
+        } else {
+          console.warn("Firebase SDK not available; externalForms config will not be loaded.");
+        }
+      } catch (e) {
+        console.error("Error initializing Firebase for external forms config:", e);
+      }
+
+      async function loadExternalFormsConfig() {
+        if (!teamId || !db) {
+          return;
+        }
+        try {
+          const docRef = db
+            .collection("teams")
+            .doc(teamId)
+            .collection("config")
+            .doc("externalForms");
+          const snap = await docRef.get();
+          if (!snap.exists) {
+            return;
+          }
+          const data = snap.data() || {};
+
+          const invoiceEnabled = data.invoiceEnabled !== false; // default to true
+          const instructions = (data.invoiceInstructions || "").trim();
+
+          if (instructions) {
+            instructionsEl.textContent = instructions;
+            instructionsEl.style.display = "block";
+          }
+
+          if (!invoiceEnabled) {
+            // Hide the form and show a notice instead
+            if (form) {
+              form.style.display = "none";
+            }
+            formDisabledNotice.textContent =
+              "This invoice form is currently disabled. Please contact the church office if you have questions.";
+            formDisabledNotice.style.display = "block";
+          }
+        } catch (err) {
+          console.error("Error loading externalForms config:", err);
+        }
+      }
+
+      // Kick off config load (non-blocking)
+      loadExternalFormsConfig();
+
+      // Helper to upload the selected file to Storage
+      async function uploadInvoiceFile(teamId, file) {
+        if (!file || !storage) {
+          return null;
+        }
+
+        const requestId =
+          "inv_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+        const safeName = encodeURIComponent(file.name);
+        const filePath = `teams/${teamId}/external_attachments/${requestId}/${safeName}`;
+
+        const ref = storage.ref().child(filePath);
+        await ref.put(file);
+
+        return { filePath, requestId };
+      }
+
+      function updatePaymentUI() {
+        const selected = paymentOptions.find((o) => o.checked)?.value || "direct_deposit";
+        const dd = domById("directDepositDetails");
+        const mail = domById("mailDetails");
+        const pickup = domById("pickupDetails");
+
+        dd.style.display = selected === "direct_deposit" ? "block" : "none";
+        mail.style.display = selected === "mail_check" ? "block" : "none";
+        pickup.style.display = selected === "pickup" ? "block" : "none";
+
+        document
+          .querySelectorAll(".payment-option")
+          .forEach((opt) => opt.classList.remove("active"));
+
+        paymentOptions.forEach((opt) => {
+          if (opt.checked) {
+            opt.closest(".payment-option")?.classList.add("active");
+          }
+        });
+      }
+
+      paymentOptions.forEach((opt) => {
+        opt.addEventListener("change", updatePaymentUI);
+      });
+      updatePaymentUI();
+
+      // Auto-format phone number as 423-555-1234
+      const phoneInput = domById("requesterPhone");
+      phoneInput.addEventListener("input", function () {
+        let digits = this.value.replace(/\D/g, "").slice(0, 10);
+        let formatted = "";
+        if (digits.length <= 3) {
+          formatted = digits;
+        } else if (digits.length <= 6) {
+          formatted = digits.slice(0, 3) + "-" + digits.slice(3);
+        } else {
+          formatted =
+            digits.slice(0, 3) + "-" + digits.slice(3, 6) + "-" + digits.slice(6);
+        }
+        this.value = formatted;
+      });
+
+      // Hide/show direct deposit account fields
+      const useExistingCheckbox = domById("useExistingDepositInfo");
+      const ddFields = domById("ddFields");
+      function updateDdFields() {
+        ddFields.style.display = useExistingCheckbox.checked ? "none" : "block";
+      }
+      useExistingCheckbox.addEventListener("change", updateDdFields);
+      updateDdFields();
+
+      form.addEventListener("submit", async function (evt) {
+        evt.preventDefault();
+        clearMessages();
+
+        if (!teamId) {
+          showError("This form is missing the team id. Please use the link provided by your church.");
+          return;
+        }
+
+        const businessName = domById("vendorName").value.trim();
+        const requesterPhone = domById("requesterPhone").value.trim();
+        const requesterEmail = domById("requesterEmail").value.trim();
+        const contactName = domById("requesterName").value.trim();
+        const invoiceNumber = domById("invoiceNumber").value.trim();
+        const amountStr = domById("amount").value.trim();
+        const dueDate = domById("dueDate").value;
+        const description = domById("description").value.trim();
+
+        const paymentMethod =
+          (paymentOptions.find((o) => o.checked)?.value || "direct_deposit").trim();
+
+        if (!requesterPhone) {
+          showError("Please enter a phone number.");
+          return;
+        }
+        if (!requesterEmail) {
+          showError("Please enter an email address.");
+          return;
+        }
+        if (!contactName) {
+          showError("Please enter a contact name.");
+          return;
+        }
+        if (!amountStr || isNaN(Number(amountStr))) {
+          showError("Please enter a valid amount due.");
+          return;
+        }
+        if (!description) {
+          showError("Please describe what this invoice is for.");
+          return;
+        }
+
+        let useExisting = false;
+        let routing = "";
+        let account = "";
+        let payToName = "";
+        let mailingAddress = "";
+
+        if (paymentMethod === "direct_deposit") {
+          useExisting = useExistingCheckbox.checked;
+          if (!useExisting) {
+            routing = domById("bankRoutingNumber").value.trim();
+            account = domById("bankAccountNumber").value.trim();
+            if (!routing || !account) {
+              showError(
+                "Please enter both routing and account numbers, or choose to use existing direct deposit info."
+              );
+              return;
+            }
+          }
+        } else if (paymentMethod === "mail_check") {
+          payToName = domById("payToName").value.trim();
+          mailingAddress = domById("mailingAddress").value.trim();
+          if (!payToName || !mailingAddress) {
+            showError("Please enter the name and mailing address for the check.");
+            return;
+          }
+        } else if (paymentMethod === "pickup") {
+          // No extra fields, just info text.
+        }
+
+        // Handle optional attachment upload
+        const fileInput = domById("invoiceFile");
+        const file = fileInput && fileInput.files ? fileInput.files[0] : null;
+
+        let attachmentInfo = null;
+        if (file) {
+          try {
+            attachmentInfo = await uploadInvoiceFile(teamId, file);
+          } catch (uploadErr) {
+            console.error("uploadInvoiceFile error", uploadErr);
+            showError("There was an error uploading your attachment. Please try again.");
+            return;
+          }
+        }
+
+        const amountCents = Math.round(Number(amountStr) * 100);
+
+        const payload = {
+          teamId: teamId,
+          title: "Invoice: " + businessName + (invoiceNumber ? " • " + invoiceNumber : ""),
+          requesterName: contactName,
+          requesterEmail: requesterEmail,
+          requesterPhone: requesterPhone,
+          vendorName: businessName,
+          // Explicit aliases help backend normalize correctly even if old forms differ.
+          contactName: contactName,
+          businessName: businessName,
+          invoiceNumber: invoiceNumber || null,
+          amountCents: amountCents,
+          currencyCode: "USD",
+          dueDate: dueDate || null,
+          description: description,
+          paymentMethod: paymentMethod,
+          useExistingDepositInfo: paymentMethod === "direct_deposit" ? !!useExisting : false,
+          bankRoutingNumber:
+            paymentMethod === "direct_deposit" && !useExisting ? routing : null,
+          bankAccountNumber:
+            paymentMethod === "direct_deposit" && !useExisting ? account : null,
+          payToName: paymentMethod === "mail_check" ? payToName : null,
+          mailingAddress: paymentMethod === "mail_check" ? mailingAddress : null,
+          attachments: attachmentInfo ? [attachmentInfo.filePath] : [],
+          clientRequestId: attachmentInfo ? attachmentInfo.requestId : null
+        };
+
+        submitButton.disabled = true;
+
+        try {
+            const resp = await fetch(
+              "https://us-central1-crswlkoperations.cloudfunctions.net/submitExternalInvoice",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+              }
+            );
+
+
+          if (!resp.ok) {
+            const data = await resp.json().catch(() => ({}));
+            const msg =
+              (data && data.error) ||
+              (data && data.message) ||
+              "There was an error submitting your invoice.";
+            showError(msg);
+            submitButton.disabled = false;
+            return;
+          }
+
+          form.reset();
+          updatePaymentUI();
+          updateDdFields();
+          showSuccess("Thank you! Your invoice has been submitted successfully.");
+        } catch (err) {
+          console.error("submitExternalInvoice error", err);
+          showError("Unexpected error submitting your invoice. Please try again in a moment.");
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Request a Private Event – ChurchOps</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f5f5f9;
+      --card: #ffffff;
+      --accent: #2563f2;
+      --accent-soft: #e5edff;
+      --danger: #d14343;
+      --text-main: #1f2933;
+      --text-muted: #7b8794;
+      --border: #d8e2f2;
+      --surface: #f9fbff;
+      --success-bg: #e3f9e5;
+      --success-border: #8ed1a5;
+      --success-text: #03543f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 32px 16px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 760px;
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      padding: 24px 24px 28px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .intro {
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .section-label {
+      margin-top: 18px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .field-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .field {
+      flex: 1 1 220px;
+      min-width: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    label .req {
+      color: var(--danger);
+      margin-left: 2px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="datetime-local"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text-main);
+      background-color: var(--surface);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background-color: #ffffff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 242, 0.2);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .help {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .section-note {
+      margin: -2px 0 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .checkbox-row input {
+      margin: 0;
+    }
+
+    .checkbox-group {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+
+    .room-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+
+    .room-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 6px 4px;
+      border-radius: 8px;
+    }
+
+    .room-item:hover {
+      background: rgba(37, 99, 242, 0.04);
+    }
+
+    .room-item label {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .room-meta {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .estimate-card {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #f8fbff 0%, #fdfdff 100%);
+    }
+
+    .estimate-title {
+      margin: 0 0 4px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .estimate-subtitle {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .estimate-hint {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .estimate-callout {
+      position: relative;
+      padding: 12px 14px 12px 46px;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-weight: 600;
+      box-shadow: inset 4px 0 0 var(--accent);
+    }
+
+    .estimate-callout::before {
+      content: "i";
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .estimate-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .estimate-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 13px;
+    }
+
+    .estimate-line strong {
+      white-space: nowrap;
+    }
+
+    .estimate-line-meta {
+      display: block;
+      margin-top: 2px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .estimate-total {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(31, 41, 51, 0.08);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .estimate-total span {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .estimate-total strong {
+      font-size: 20px;
+      color: var(--text-main);
+    }
+
+    .estimate-disclaimer {
+      margin-top: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    .error-banner {
+      display: none;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(209, 67, 67, 0.06);
+      border: 1px solid rgba(209, 67, 67, 0.3);
+      color: #8b1c1c;
+      font-size: 13px;
+    }
+
+    .success-banner {
+      display: none;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: var(--success-text);
+      font-size: 13px;
+    }
+
+    .info-banner {
+      display: none;
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      font-size: 13px;
+    }
+
+    .actions {
+      margin-top: 16px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .button-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(37, 99, 242, 0.25);
+      transition: box-shadow 0.15s ease, transform 0.08s ease, background-color 0.15s ease;
+    }
+
+    .button-primary:hover {
+      background: #1746d3;
+      box-shadow: 0 10px 20px rgba(37, 99, 242, 0.32);
+    }
+
+    .button-primary:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 8px rgba(37, 99, 242, 0.2);
+    }
+
+    .button-primary[disabled] {
+      opacity: 0.5;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 20px 16px 24px;
+      }
+    }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <div class="page">
+    <div class="card">
+      <div class="eyebrow">Private / External Event Request</div>
+      <h1>Request a Private Event</h1>
+      <p class="intro">
+        Use this form to request a private event at our church. We’ll review your request, confirm availability,
+        and follow up with any next steps needed to move forward.
+      </p>
+
+      <div id="dynamicInstructions" class="intro" style="display:none;"></div>
+      <div id="formDisabledNotice" class="info-banner"></div>
+      <div id="errorBanner" class="error-banner"></div>
+      <div id="successBanner" class="success-banner"></div>
+
+      <form id="eventForm" novalidate>
+        <div class="section-label">Contact Information</div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="requesterName">Your Name <span class="req">*</span></label>
+            <input id="requesterName" name="requesterName" type="text" autocomplete="name" required />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="requesterEmail">Email <span class="req">*</span></label>
+            <input id="requesterEmail" name="requesterEmail" type="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="requesterPhone">Phone <span class="req">*</span></label>
+            <input id="requesterPhone" name="requesterPhone" type="tel" inputmode="tel" placeholder="423-555-1234" required />
+            <div class="help">We’ll format this as you type.</div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="orgName">Group / Organization (Optional)</label>
+            <input id="orgName" name="orgName" type="text" />
+          </div>
+        </div>
+
+        <div class="section-label">Event Details</div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="title">Event Name / Title <span class="req">*</span></label>
+            <input id="title" name="title" type="text" required />
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="description">What Is This Event For? <span class="req">*</span></label>
+            <textarea id="description" name="description" rows="3" required></textarea>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="expectedAttendance">Estimated Attendance</label>
+            <input id="expectedAttendance" name="expectedAttendance" type="number" min="1" step="1" placeholder="e.g. 40" />
+          </div>
+        </div>
+
+        <div class="section-label">Estimate Details</div>
+        <p class="section-note">
+          Fill out the fields in this section to generate a live estimate. Requester type, rooms, date/time, and support selections all affect pricing.
+        </p>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="requesterType">Requester Type <span class="req">*</span></label>
+            <select id="requesterType" name="requesterType" required>
+              <option value="">Select One</option>
+              <option value="staff">Staff</option>
+              <option value="member">Member</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="structuredLocationSection" style="display:none;">
+          <div class="field-row">
+            <div class="field">
+              <label for="structuredCampus">Campus <span class="req">*</span></label>
+              <select id="structuredCampus" name="structuredCampus">
+                <option value="">Select a Campus</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label>Rooms <span class="req">*</span></label>
+              <div id="roomList" class="room-list">
+                <div class="estimate-hint">Select a campus to see rentable rooms.</div>
+              </div>
+              <div class="help">You can choose more than one room within the selected campus.</div>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="locationNotes">Additional Location Notes (Optional)</label>
+              <textarea id="locationNotes" name="locationNotes" rows="2" placeholder="Anything else our team should know about the space you need?"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div id="legacyLocationSection">
+          <div class="field-row">
+            <div class="field">
+              <label for="locationNameLegacy">Preferred Location (Optional)</label>
+              <input id="locationNameLegacy" name="locationNameLegacy" type="text" placeholder="Room, area, or off-site address" />
+            </div>
+            <div class="field">
+              <label for="campusIdLegacy">Campus (If You Know It)</label>
+              <input id="campusIdLegacy" name="campusIdLegacy" type="text" placeholder="e.g. Main Campus" />
+            </div>
+          </div>
+          <div class="help">
+            Rentable room pricing is still being configured for this form. You can still submit your request and our team will follow up with an estimate.
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="startDateTime">Start Date &amp; Time <span class="req">*</span></label>
+            <input id="startDateTime" name="startDateTime" type="datetime-local" required />
+          </div>
+          <div class="field">
+            <label for="endDateTime">End Date &amp; Time <span class="req">*</span></label>
+            <input id="endDateTime" name="endDateTime" type="datetime-local" required />
+          </div>
+        </div>
+
+        <div class="section-label">Support Needed</div>
+        <div class="field-row">
+          <div class="field">
+            <div class="checkbox-group">
+              <div class="checkbox-row">
+                <input id="needsRooms" name="needsRooms" type="checkbox" />
+                <label for="needsRooms">Room / Space Setup</label>
+              </div>
+              <div class="checkbox-row">
+                <input id="needsTeardown" name="needsTeardown" type="checkbox" />
+                <label for="needsTeardown">Teardown Assistance</label>
+              </div>
+              <div class="checkbox-row">
+                <input id="needsAV" name="needsAV" type="checkbox" />
+                <label for="needsAV">Tech / AV Support (Estimated by Event Duration)</label>
+              </div>
+              <div class="checkbox-row">
+                <input id="needsCleanup" name="needsCleanup" type="checkbox" />
+                <label for="needsCleanup">Cleanup Service</label>
+              </div>
+              <div class="checkbox-row">
+                <input id="needsTablesAndChairs" name="needsTablesAndChairs" type="checkbox" />
+                <label for="needsTablesAndChairs">Tables / Chairs Needed</label>
+              </div>
+              <div class="help">You can choose more than one if needed.</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tablesChairsSection" style="display:none;">
+          <div class="field-row">
+            <div class="field">
+              <label for="tablesCount">How Many Tables?</label>
+              <input id="tablesCount" name="tablesCount" type="number" min="0" step="1" placeholder="0" />
+            </div>
+            <div class="field">
+              <label for="chairsCount">How Many Chairs?</label>
+              <input id="chairsCount" name="chairsCount" type="number" min="0" step="1" placeholder="0" />
+            </div>
+          </div>
+          <div class="help">Enter at least one table or chair quantity if this option is selected.</div>
+        </div>
+
+        <div class="estimate-card">
+          <p class="estimate-title">Estimated Cost</p>
+          <p class="estimate-subtitle">
+            We’ll use the estimate details above to provide a planning estimate before you submit.
+          </p>
+
+          <div id="estimateState" class="estimate-hint estimate-callout">
+            Fill out the fields in the Estimate Details section to generate a live estimate.
+          </div>
+
+          <div id="estimateBreakdown" style="display:none;">
+            <div id="estimateLineItems" class="estimate-lines"></div>
+            <div class="estimate-total">
+              <span>Estimated Total</span>
+              <strong id="estimateTotal">$0.00</strong>
+            </div>
+          </div>
+
+          <div id="estimateDisclaimer" class="estimate-disclaimer">
+            This estimate is provided for planning purposes only and is not a final invoice. Facility use fees may vary based on staffing, setup needs, room availability, and final event details. Our team will review your request and follow up with a confirmed estimate and next steps.
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" id="submitButton" class="button-primary">Submit Event Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const DEFAULT_DISCLAIMER =
+        "This estimate is provided for planning purposes only and is not a final invoice. " +
+        "Facility use fees may vary based on staffing, setup needs, room availability, and final event details. " +
+        "Our team will review your request and follow up with a confirmed estimate and next steps.";
+
+      const SETUP_URL = "https://us-central1-crswlkoperations.cloudfunctions.net/getExternalEventRequestSetup";
+      const ESTIMATE_URL = "https://us-central1-crswlkoperations.cloudfunctions.net/estimateExternalEventRequest";
+      const SUBMIT_URL = "https://us-central1-crswlkoperations.cloudfunctions.net/submitExternalEventRequest";
+      const ESTIMATE_REQUIREMENTS_HINT =
+        "Fill out the fields in the Estimate Details section to generate a live estimate.";
+
+      function domById(id) { return document.getElementById(id); }
+
+      const params = new URLSearchParams(window.location.search);
+      const teamId = (params.get("teamId") || "").trim();
+
+      const state = {
+        pricingReady: false,
+        campuses: [],
+        disclaimer: DEFAULT_DISCLAIMER,
+        estimateToken: 0,
+        estimateTimer: null
+      };
+
+      function formatMoney(cents) {
+        const dollars = (Number(cents || 0) / 100);
+        return new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD"
+        }).format(dollars);
+      }
+
+      function showError(msg) {
+        const el = domById("errorBanner");
+        el.textContent = msg;
+        el.style.display = "block";
+        domById("successBanner").style.display = "none";
+      }
+
+      function showSuccess(msg) {
+        const el = domById("successBanner");
+        el.textContent = msg;
+        el.style.display = "block";
+        domById("errorBanner").style.display = "none";
+      }
+
+      function clearMessages() {
+        domById("errorBanner").style.display = "none";
+        domById("successBanner").style.display = "none";
+      }
+
+      function setEstimateDisclaimer(text) {
+        const disclaimer = (text || "").trim() || DEFAULT_DISCLAIMER;
+        state.disclaimer = disclaimer;
+        domById("estimateDisclaimer").textContent = disclaimer;
+      }
+
+      function setEstimateHint(message) {
+        domById("estimateState").textContent = message;
+        domById("estimateState").style.display = "block";
+        domById("estimateBreakdown").style.display = "none";
+        domById("estimateLineItems").innerHTML = "";
+        domById("estimateTotal").textContent = formatMoney(0);
+      }
+
+      function renderEstimate(estimate) {
+        if (!estimate || estimate.status !== "available") {
+          const reason =
+            (estimate && estimate.unavailableReason) ||
+            "We’ll review your request and follow up with a confirmed estimate.";
+          setEstimateHint(reason);
+          if (estimate && estimate.disclaimer) {
+            setEstimateDisclaimer(estimate.disclaimer);
+          }
+          return;
+        }
+
+        const lines = Array.isArray(estimate.lineItems) ? estimate.lineItems : [];
+        const lineItemsEl = domById("estimateLineItems");
+        lineItemsEl.innerHTML = "";
+
+        lines.forEach(function (item) {
+          const row = document.createElement("div");
+          row.className = "estimate-line";
+
+          const left = document.createElement("div");
+          left.innerHTML =
+            "<strong>" + escapeHtml(item.label || "") + "</strong>" +
+            "<span class=\"estimate-line-meta\">" +
+            escapeHtml(formatQuantity(item.quantity, item.unitLabel) + " x " + formatMoney(item.rateCents)) +
+            "</span>";
+
+          const right = document.createElement("strong");
+          right.textContent = formatMoney(item.amountCents);
+
+          row.appendChild(left);
+          row.appendChild(right);
+          lineItemsEl.appendChild(row);
+        });
+
+        domById("estimateState").style.display = "none";
+        domById("estimateBreakdown").style.display = "block";
+        domById("estimateTotal").textContent = formatMoney(estimate.totalCents);
+        setEstimateDisclaimer(estimate.disclaimer);
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function formatQuantity(quantity, unitLabel) {
+        const amount = Number(quantity || 0);
+        const rounded = Math.round(amount * 100) / 100;
+        const qty = Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
+        const unit = unitLabel || "item";
+        return qty + " " + unit + (qty === "1" ? "" : "s");
+      }
+
+      function selectedRoomInputs() {
+        return Array.from(document.querySelectorAll("#roomList input[type='checkbox']:checked"));
+      }
+
+      function selectedRoomIds() {
+        return selectedRoomInputs().map(function (input) { return input.value; });
+      }
+
+      function selectedRoomNames() {
+        return selectedRoomInputs().map(function (input) { return input.dataset.roomName || ""; }).filter(Boolean);
+      }
+
+      function currentCampus() {
+        return domById("structuredCampus").value.trim();
+      }
+
+      function syncTablesChairsVisibility() {
+        const visible = domById("needsTablesAndChairs").checked;
+        domById("tablesChairsSection").style.display = visible ? "block" : "none";
+        queueEstimateRefresh();
+      }
+
+      function setLocationMode(pricingReady) {
+        state.pricingReady = pricingReady === true;
+        domById("structuredLocationSection").style.display = state.pricingReady ? "block" : "none";
+        domById("legacyLocationSection").style.display = state.pricingReady ? "none" : "block";
+
+        if (state.pricingReady) {
+          setEstimateHint(ESTIMATE_REQUIREMENTS_HINT);
+        } else {
+          setEstimateHint("Room-based pricing is still being configured for this form. You can still submit a request and our team will follow up with an estimate.");
+        }
+      }
+
+      function populateCampuses(campuses) {
+        const select = domById("structuredCampus");
+        select.innerHTML = "<option value=\"\">Select a Campus</option>";
+
+        campuses.forEach(function (campus) {
+          const option = document.createElement("option");
+          option.value = campus.name;
+          option.textContent = campus.name;
+          select.appendChild(option);
+        });
+      }
+
+      function renderRoomsForCampus() {
+        const campusName = currentCampus();
+        const roomList = domById("roomList");
+        roomList.innerHTML = "";
+
+        if (!campusName) {
+          roomList.innerHTML = "<div class=\"estimate-hint\">Select a Campus to See Rentable Rooms.</div>";
+          queueEstimateRefresh();
+          return;
+        }
+
+        const campus = state.campuses.find(function (entry) { return entry.name === campusName; });
+        if (!campus || !Array.isArray(campus.rooms) || campus.rooms.length === 0) {
+          roomList.innerHTML = "<div class=\"estimate-hint\">No Rentable Rooms Are Configured for This Campus Yet.</div>";
+          queueEstimateRefresh();
+          return;
+        }
+
+        campus.rooms.forEach(function (room) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "room-item";
+
+          const input = document.createElement("input");
+          input.type = "checkbox";
+          input.value = room.id;
+          input.dataset.roomName = room.name;
+          input.id = "room-" + room.id;
+          input.addEventListener("change", queueEstimateRefresh);
+
+          const label = document.createElement("label");
+          label.setAttribute("for", input.id);
+          label.innerHTML =
+            escapeHtml(room.name) +
+            "<span class=\"room-meta\">" +
+            escapeHtml(room.capacity ? "Capacity " + room.capacity : "Rentable Room") +
+            "</span>";
+
+          wrapper.appendChild(input);
+          wrapper.appendChild(label);
+          roomList.appendChild(wrapper);
+        });
+
+        queueEstimateRefresh();
+      }
+
+      function parseCount(id) {
+        const raw = domById(id).value.trim();
+        if (!raw) return 0;
+        const parsed = Number(raw);
+        if (!Number.isFinite(parsed)) return 0;
+        return Math.max(0, Math.round(parsed));
+      }
+
+      function estimateInputsReady() {
+        if (!state.pricingReady) return false;
+
+        const requesterType = domById("requesterType").value.trim();
+        const startDateTime = domById("startDateTime").value;
+        const endDateTime = domById("endDateTime").value;
+
+        if (!requesterType || !startDateTime || !endDateTime) return false;
+        if (!currentCampus()) return false;
+        if (selectedRoomIds().length === 0) return false;
+
+        const startDate = new Date(startDateTime);
+        const endDate = new Date(endDateTime);
+        if (!(endDate > startDate)) return false;
+
+        if (domById("needsTablesAndChairs").checked) {
+          return parseCount("tablesCount") > 0 || parseCount("chairsCount") > 0;
+        }
+        return true;
+      }
+
+      function buildEstimatePayload() {
+        return {
+          teamId: teamId,
+          requesterType: domById("requesterType").value.trim(),
+          campusId: currentCampus() || null,
+          roomIds: selectedRoomIds(),
+          startDate: new Date(domById("startDateTime").value).toISOString(),
+          endDate: new Date(domById("endDateTime").value).toISOString(),
+          needsSetup: domById("needsRooms").checked,
+          needsAV: domById("needsAV").checked,
+          needsTeardown: domById("needsTeardown").checked,
+          needsCleanup: domById("needsCleanup").checked,
+          needsTablesAndChairs: domById("needsTablesAndChairs").checked,
+          tablesCount: parseCount("tablesCount"),
+          chairsCount: parseCount("chairsCount")
+        };
+      }
+
+      async function refreshEstimate() {
+        if (!teamId) return;
+
+        if (!state.pricingReady) {
+          setEstimateHint("Room-based pricing is still being configured for this form. You can still submit a request and our team will follow up with an estimate.");
+          return;
+        }
+
+        if (!estimateInputsReady()) {
+          setEstimateHint(ESTIMATE_REQUIREMENTS_HINT);
+          return;
+        }
+
+        const token = ++state.estimateToken;
+
+        try {
+          const resp = await fetch(ESTIMATE_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(buildEstimatePayload())
+          });
+
+          if (!resp.ok) {
+            throw new Error("Estimate request failed");
+          }
+
+          const data = await resp.json();
+          if (token !== state.estimateToken) return;
+          renderEstimate(data);
+        } catch (err) {
+          console.error("estimateExternalEventRequest error", err);
+          if (token !== state.estimateToken) return;
+          setEstimateHint("We couldn’t calculate an estimate just now. You can still submit your request and our team will follow up.");
+        }
+      }
+
+      function queueEstimateRefresh() {
+        if (state.estimateTimer) {
+          clearTimeout(state.estimateTimer);
+        }
+        state.estimateTimer = setTimeout(refreshEstimate, 250);
+      }
+
+      async function loadExternalFormsConfig() {
+        const instructionsEl = domById("dynamicInstructions");
+        const formDisabledNotice = domById("formDisabledNotice");
+
+        if (!teamId || !db) {
+          return;
+        }
+        try {
+          const docRef = db
+            .collection("teams")
+            .doc(teamId)
+            .collection("config")
+            .doc("externalForms");
+          const snap = await docRef.get();
+          if (!snap.exists) {
+            return;
+          }
+          const data = snap.data() || {};
+
+          const eventEnabled = data.eventEnabled !== false;
+          const instructions = (data.eventInstructions || "").trim();
+
+          if (instructions) {
+            instructionsEl.textContent = instructions;
+            instructionsEl.style.display = "block";
+          }
+
+          if (!eventEnabled) {
+            const form = domById("eventForm");
+            if (form) {
+              form.style.display = "none";
+            }
+            formDisabledNotice.textContent =
+              "This event request form is currently disabled. Please contact the church office if you have questions.";
+            formDisabledNotice.style.display = "block";
+          }
+        } catch (err) {
+          console.error("Error loading externalForms config:", err);
+        }
+      }
+
+      async function loadPublicEventSetup() {
+        if (!teamId) return;
+
+        try {
+          const resp = await fetch(SETUP_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ teamId: teamId })
+          });
+
+          if (!resp.ok) {
+            throw new Error("Setup request failed");
+          }
+
+          const data = await resp.json();
+          state.campuses = Array.isArray(data.campuses) ? data.campuses : [];
+          populateCampuses(state.campuses);
+          setEstimateDisclaimer(data.disclaimer);
+          setLocationMode(data.pricingReady === true && state.campuses.length > 0);
+          renderRoomsForCampus();
+        } catch (err) {
+          console.error("getExternalEventRequestSetup error", err);
+          state.campuses = [];
+          populateCampuses([]);
+          setEstimateDisclaimer(DEFAULT_DISCLAIMER);
+          setLocationMode(false);
+        }
+      }
+
+      let db = null;
+      try {
+        if (typeof firebase !== "undefined") {
+          if (!firebase.apps.length) {
+            const firebaseConfig = {
+              apiKey: "AIzaSyCLLRMc-Tw-7EJMorQzw7-736gyQhvniGQ",
+              authDomain: "crswlkoperations.firebaseapp.com",
+              projectId: "crswlkoperations",
+              storageBucket: "crswlkoperations.firebasestorage.app",
+              messagingSenderId: "828244861941",
+              appId: "1:828244861941:web:4a41c371fb8474f12476bc",
+              measurementId: "G-N9892V2MT7"
+            };
+            firebase.initializeApp(firebaseConfig);
+          }
+          db = firebase.firestore();
+        }
+      } catch (e) {
+        console.error("Error initializing Firebase for external forms config:", e);
+      }
+
+      loadExternalFormsConfig();
+      loadPublicEventSetup();
+
+      const phoneInput = domById("requesterPhone");
+      phoneInput.addEventListener("input", function () {
+        let digits = this.value.replace(/\D/g, "").slice(0, 10);
+        let formatted = "";
+        if (digits.length <= 3) {
+          formatted = digits;
+        } else if (digits.length <= 6) {
+          formatted = digits.slice(0, 3) + "-" + digits.slice(3);
+        } else {
+          formatted = digits.slice(0, 3) + "-" + digits.slice(3, 6) + "-" + digits.slice(6);
+        }
+        this.value = formatted;
+      });
+
+      domById("structuredCampus").addEventListener("change", renderRoomsForCampus);
+      domById("requesterType").addEventListener("change", queueEstimateRefresh);
+      domById("startDateTime").addEventListener("change", queueEstimateRefresh);
+      domById("endDateTime").addEventListener("change", queueEstimateRefresh);
+      domById("needsRooms").addEventListener("change", queueEstimateRefresh);
+      domById("needsTeardown").addEventListener("change", queueEstimateRefresh);
+      domById("needsAV").addEventListener("change", queueEstimateRefresh);
+      domById("needsCleanup").addEventListener("change", queueEstimateRefresh);
+      domById("needsTablesAndChairs").addEventListener("change", syncTablesChairsVisibility);
+      domById("tablesCount").addEventListener("input", queueEstimateRefresh);
+      domById("chairsCount").addEventListener("input", queueEstimateRefresh);
+
+      const form = domById("eventForm");
+      const submitButton = domById("submitButton");
+
+      form.addEventListener("submit", async function (evt) {
+        evt.preventDefault();
+        clearMessages();
+
+        if (!teamId) {
+          showError("This form is missing the team id. Please use the link provided by your church.");
+          return;
+        }
+
+        const requesterName = domById("requesterName").value.trim();
+        const requesterEmail = domById("requesterEmail").value.trim();
+        const requesterPhone = domById("requesterPhone").value.trim();
+        const requesterType = domById("requesterType").value.trim();
+        const orgName = domById("orgName").value.trim();
+        const title = domById("title").value.trim();
+        const description = domById("description").value.trim();
+        const startDateTime = domById("startDateTime").value;
+        const endDateTime = domById("endDateTime").value;
+        const expectedAttendanceStr = domById("expectedAttendance").value.trim();
+        const setupNeeded = domById("needsRooms").checked;
+        const teardownNeeded = domById("needsTeardown").checked;
+        const avNeeded = domById("needsAV").checked;
+        const cleanupNeeded = domById("needsCleanup").checked;
+        const needsTablesAndChairs = domById("needsTablesAndChairs").checked;
+        const tablesCount = parseCount("tablesCount");
+        const chairsCount = parseCount("chairsCount");
+
+        if (!requesterName) { showError("Please enter your name."); return; }
+        if (!requesterEmail) { showError("Please enter your email."); return; }
+        if (!requesterPhone) { showError("Please enter your phone number."); return; }
+        if (!requesterType) { showError("Please choose whether you are staff, a member, or other."); return; }
+        if (!title) { showError("Please enter an event name."); return; }
+        if (!startDateTime || !endDateTime) {
+          showError("Please provide both start and end date/time.");
+          return;
+        }
+        if (!description) {
+          showError("Please describe what this event is for.");
+          return;
+        }
+
+        const startDate = new Date(startDateTime);
+        const endDate = new Date(endDateTime);
+        if (!(endDate > startDate)) {
+          showError("End date/time must be after the start date/time.");
+          return;
+        }
+
+        if (needsTablesAndChairs && tablesCount <= 0 && chairsCount <= 0) {
+          showError("Enter at least one table or chair quantity.");
+          return;
+        }
+
+        let locationName = null;
+        let campusId = null;
+        let roomIds = [];
+        let roomNames = [];
+        let locationNotes = null;
+
+        if (state.pricingReady) {
+          campusId = currentCampus() || null;
+          roomIds = selectedRoomIds();
+          roomNames = selectedRoomNames();
+          locationNotes = domById("locationNotes").value.trim() || null;
+
+          if (!campusId) {
+            showError("Please choose a campus.");
+            return;
+          }
+          if (roomIds.length === 0) {
+            showError("Please choose at least one room.");
+            return;
+          }
+        } else {
+          locationName = domById("locationNameLegacy").value.trim() || null;
+          campusId = domById("campusIdLegacy").value.trim() || null;
+        }
+
+        let expectedAttendance = null;
+        if (expectedAttendanceStr !== "" && !isNaN(Number(expectedAttendanceStr))) {
+          expectedAttendance = Number(expectedAttendanceStr);
+        }
+
+        const payload = {
+          teamId: teamId,
+          title: title,
+          requesterName: requesterName,
+          requesterEmail: requesterEmail,
+          requesterPhone: requesterPhone,
+          requesterType: requesterType,
+          organizationName: orgName || null,
+          description: description,
+          locationName: locationName,
+          locationNotes: locationNotes,
+          campusId: campusId,
+          roomIds: roomIds,
+          roomNames: roomNames,
+          expectedAttendance: expectedAttendance,
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+          needsSetup: setupNeeded,
+          needsRooms: setupNeeded,
+          needsTeardown: teardownNeeded,
+          needsAV: avNeeded,
+          needsCleanup: cleanupNeeded,
+          needsTablesAndChairs: needsTablesAndChairs,
+          tablesCount: needsTablesAndChairs ? tablesCount : null,
+          chairsCount: needsTablesAndChairs ? chairsCount : null
+        };
+
+        submitButton.disabled = true;
+
+        try {
+          const resp = await fetch(SUBMIT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+
+          if (!resp.ok) {
+            const data = await resp.json().catch(function () { return {}; });
+            const msg =
+              (data && data.error) ||
+              (data && data.message) ||
+              "There was an error submitting your event request.";
+            showError(msg);
+            submitButton.disabled = false;
+            return;
+          }
+
+          form.reset();
+          domById("structuredCampus").value = "";
+          setEstimateDisclaimer(state.disclaimer);
+          syncTablesChairsVisibility();
+          renderRoomsForCampus();
+          showSuccess("Thank you. Your event request has been submitted, and our team will follow up soon.");
+        } catch (err) {
+          console.error("submitExternalEventRequest error", err);
+          showError("Unexpected error submitting your request. Please try again in a moment.");
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+
+      syncTablesChairsVisibility();
+    })();
+  </script>
+</body>
+</html>
