@@ -209,6 +209,53 @@
       font-size: 13px;
     }
 
+    .submit-progress {
+      display: none;
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      font-size: 13px;
+    }
+
+    .submit-progress-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .submit-progress-text {
+      color: #3b5b85;
+      line-height: 1.4;
+    }
+
+    .submit-progress-bar {
+      position: relative;
+      overflow: hidden;
+      height: 4px;
+      margin-top: 10px;
+      border-radius: 999px;
+      background: #dbeafe;
+    }
+
+    .submit-progress-bar::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 42%;
+      border-radius: inherit;
+      background: var(--accent);
+      animation: submitProgress 1.1s ease-in-out infinite;
+    }
+
+    @keyframes submitProgress {
+      0% { transform: translateX(-110%); }
+      100% { transform: translateX(250%); }
+    }
+
     .actions {
       margin-top: 16px;
       display: flex;
@@ -298,6 +345,11 @@
 
       <div id="errorBanner" class="error-banner"></div>
       <div id="successBanner" class="success-banner"></div>
+      <div id="submitProgress" class="submit-progress" role="status" aria-live="polite" aria-atomic="true">
+        <div class="submit-progress-title">Submitting...</div>
+        <div id="submitProgressText" class="submit-progress-text">Please wait while we send your invoice.</div>
+        <div class="submit-progress-bar"></div>
+      </div>
 
       <form id="invoiceForm" novalidate>
         <!-- Business & Contact -->
@@ -456,6 +508,8 @@
         el.textContent = msg;
         el.style.display = "block";
         domById("successBanner").style.display = "none";
+        hideSubmitProgress();
+        scrollToStatus(el);
       }
 
       function showSuccess(msg) {
@@ -463,11 +517,42 @@
         el.textContent = msg;
         el.style.display = "block";
         domById("errorBanner").style.display = "none";
+        hideSubmitProgress();
+        scrollToStatus(el);
       }
 
       function clearMessages() {
         domById("errorBanner").style.display = "none";
         domById("successBanner").style.display = "none";
+        hideSubmitProgress();
+      }
+
+      function scrollToStatus(el) {
+        if (!el) {
+          return;
+        }
+        window.setTimeout(function () {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 0);
+      }
+
+      function setSubmitProgress(message) {
+        const el = domById("submitProgress");
+        const text = domById("submitProgressText");
+        if (text) {
+          text.textContent = message || "Please wait while we send your invoice.";
+        }
+        if (el) {
+          el.style.display = "block";
+          scrollToStatus(el);
+        }
+      }
+
+      function hideSubmitProgress() {
+        const el = domById("submitProgress");
+        if (el) {
+          el.style.display = "none";
+        }
       }
 
       // Get teamId from ?teamId=... in query string
@@ -482,6 +567,19 @@
       const formDisabledNotice = domById("formDisabledNotice");
       const form = domById("invoiceForm");
       const submitButton = domById("submitButton");
+      const defaultSubmitButtonText = submitButton.textContent.trim();
+
+      function startSubmitting(message) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Submitting...";
+        setSubmitProgress(message);
+      }
+
+      function finishSubmitting() {
+        submitButton.disabled = false;
+        submitButton.textContent = defaultSubmitButtonText;
+        hideSubmitProgress();
+      }
 
       // Initialize Firebase + Firestore + Storage for reading externalForms config and uploads
       let db = null;
@@ -691,6 +789,8 @@
           // No extra fields, just info text.
         }
 
+        startSubmitting("Preparing your invoice...");
+
         // Handle optional attachment upload
         const fileInput = domById("invoiceFile");
         const file = fileInput && fileInput.files ? fileInput.files[0] : null;
@@ -698,9 +798,11 @@
         let attachmentInfo = null;
         if (file) {
           try {
+            setSubmitProgress("Uploading your attachment...");
             attachmentInfo = await uploadInvoiceFile(teamId, file);
           } catch (uploadErr) {
             console.error("uploadInvoiceFile error", uploadErr);
+            finishSubmitting();
             showError("There was an error uploading your attachment. Please try again.");
             return;
           }
@@ -735,7 +837,7 @@
           clientRequestId: attachmentInfo ? attachmentInfo.requestId : null
         };
 
-        submitButton.disabled = true;
+        setSubmitProgress("Submitting your invoice...");
 
         try {
             const resp = await fetch(
@@ -755,7 +857,7 @@
               (data && data.message) ||
               "There was an error submitting your invoice.";
             showError(msg);
-            submitButton.disabled = false;
+            finishSubmitting();
             return;
           }
 
@@ -767,7 +869,7 @@
           console.error("submitExternalInvoice error", err);
           showError("Unexpected error submitting your invoice. Please try again in a moment.");
         } finally {
-          submitButton.disabled = false;
+          finishSubmitting();
         }
       });
     })();
